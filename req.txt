@@ -1,0 +1,7 @@
+langchain_core
+langchain_ollama
+uvicorn
+fastapi
+funasr
+pyaudio
+python-multipart
