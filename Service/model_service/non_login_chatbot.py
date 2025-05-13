@@ -1,16 +1,22 @@
+import base64
+import io
+import librosa
+import numpy as np
+import soundfile as sf
+
 from Service.model.non_login import NonLogin
 from Service.model.text_to_speech import TextToAudio
-from pydantic import BaseModel
 from typing import Optional
-import numpy as np
-import io
 from scipy.io.wavfile import write
-import base64
+from Service.model.speech_model import SpeechRecognitionModel
+from Service.model.non_login_speech_answer import NonLoginSpeechAnswer
+from Service.common.non_login_audio_chatbot_response import NonLoginAudioChatbotResponse
+from Service.common.non_login_chatbot_response import NonLoginChatBotResponse
 
-class NonLoginChatBotResponse(BaseModel):
-    response: str
-    audio: Optional[str] = None
 
+# non_login_model = NonLogin()
+speech_model = SpeechRecognitionModel()
+non_login_speech_answer = NonLoginSpeechAnswer()
 
 non_login_model = NonLogin()
 text_to_speech = TextToAudio()
@@ -28,3 +34,24 @@ def non_login_chatbot(place: str, info: str):
         audio_base64 = base64.b64encode(audio_bytes).decode('utf-8')
         return NonLoginChatBotResponse(response = answer, audio = audio_base64)
 
+def non_audio_chatbot(content: bytes) -> NonLoginAudioChatbotResponse:
+    buffer = io.BytesIO(content)
+    audio, sr = sf.read(buffer)
+
+    # Convert to mono if stereo
+    if len(audio.shape) == 2:
+        audio = np.mean(audio, axis=1)
+
+    # Resample to 16kHz using librosa
+    if sr != 16000:
+        audio = librosa.resample(audio, orig_sr=sr, target_sr=16000)
+        sr = 16000
+
+    # Write back to bytes as WAV
+    out_buffer = io.BytesIO()
+    sf.write(out_buffer, audio, sr, format='WAV')
+    audio_bytes = out_buffer.getvalue()
+    out_buffer.close()
+    question = speech_model.transcribe(audio_bytes)
+    answer = non_login_speech_answer.invoke(question)
+    return NonLoginAudioChatbotResponse(question = question, answer = answer)
