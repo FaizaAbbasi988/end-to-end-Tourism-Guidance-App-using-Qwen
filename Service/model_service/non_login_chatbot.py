@@ -56,13 +56,9 @@ def non_audio_chatbot(content: bytes) -> NonLoginAudioChatbotResponse:
     answer = non_login_speech_answer.invoke(question)
     if '文化介绍' in answer or '最佳路线' in answer:
         speech_answer = text_to_speech.generate(answer)
-        # Convert ndarray to bytes (WAV)
-        audio_buffer = io.BytesIO()
-        sf.write(audio_buffer, speech_answer, samplerate = 16000, format='WAV')
-        audio_bytes = audio_buffer.getvalue()
-        audio_buffer.close()
-
-        # Encode to base64 string
+        buffer = io.BytesIO()
+        write(buffer, 24000, speech_answer.astype(np.float32))  # Bark uses 24kHz
+        audio_bytes = buffer.getvalue()
         audio_base64 = base64.b64encode(audio_bytes).decode('utf-8')
         return NonLoginAudioChatbotResponse(question = question, answer = answer, audio = audio_base64)
     else:

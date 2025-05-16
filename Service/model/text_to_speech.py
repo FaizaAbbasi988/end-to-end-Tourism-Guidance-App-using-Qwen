@@ -2,16 +2,21 @@ from transformers import BarkModel
 from transformers import AutoProcessor
 import numpy as np
 import torch
+import os
 
 class TextToAudio():
     def __init__(self):
         self.load_all_models()
-        self.voice_preset = r"D:\Backend_Algorithm_travel_assistance\downloaded_models\zh_speaker_7.npz"
+        # self.voice_preset = r"D:\Backend_Algorithm_travel_assistance\downloaded_models\zh_speaker_7.npz"
     
     def load_all_models(self):
-        model_path = r'D:\Backend_Algorithm_travel_assistance\downloaded_models\bark-small'
-        self.model = BarkModel.from_pretrained(model_path).to("cuda")
-        self.processor = AutoProcessor.from_pretrained(model_path, padding=True, truncation=True)
+        self.base_dir = os.path.dirname(os.path.abspath(__file__))
+        self.downloaded_models = os.path.abspath(os.path.join(self.base_dir, '..', '..', 'downloaded_models'))
+        self.voice_preset = os.path.join(self.downloaded_models, 'zh_speaker_7.npz')
+        self.model_path = os.path.join(self.downloaded_models, 'barksmall')
+        # model_path = r'D:\Backend_Algorithm_travel_assistance\downloaded_models\barksmall'
+        self.model = BarkModel.from_pretrained(self.model_path).to("cuda")
+        self.processor = AutoProcessor.from_pretrained(self.model_path, padding=True, truncation=True)
     
     def generate(self, text):
         chunks = self.split_text(text)
