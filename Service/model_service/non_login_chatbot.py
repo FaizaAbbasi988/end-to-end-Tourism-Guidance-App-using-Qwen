@@ -54,4 +54,16 @@ def non_audio_chatbot(content: bytes) -> NonLoginAudioChatbotResponse:
     out_buffer.close()
     question = speech_model.transcribe(audio_bytes)
     answer = non_login_speech_answer.invoke(question)
-    return NonLoginAudioChatbotResponse(question = question, answer = answer)
+    if '文化介绍' in answer or '最佳路线' in answer:
+        speech_answer = text_to_speech.generate(answer)
+        # Convert ndarray to bytes (WAV)
+        audio_buffer = io.BytesIO()
+        sf.write(audio_buffer, speech_answer, samplerate = 16000, format='WAV')
+        audio_bytes = audio_buffer.getvalue()
+        audio_buffer.close()
+
+        # Encode to base64 string
+        audio_base64 = base64.b64encode(audio_bytes).decode('utf-8')
+        return NonLoginAudioChatbotResponse(question = question, answer = answer, audio = audio_base64)
+    else:
+        return NonLoginAudioChatbotResponse(question = question, answer = answer)

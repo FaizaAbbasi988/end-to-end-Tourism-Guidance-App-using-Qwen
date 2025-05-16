@@ -1,5 +1,5 @@
 from funasr import AutoModel
-
+import os
 
 class SpeechRecognitionModel:
     def __init__(self):
@@ -7,13 +7,16 @@ class SpeechRecognitionModel:
         self.load_model()
     
     def load_model(self):
-        """Initialize the ASR model with specified configurations"""
+        """Initialize the ASR model with specified configurations using relative paths"""
+        base_dir = os.path.dirname(os.path.abspath(__file__))
+        models_dir = os.path.abspath(os.path.join(base_dir, '..', '..', 'downloaded_models'))
+
         self.model = AutoModel(
-            model=r"D:\Backend_Algorithm_travel_assistance\downloaded_models\paraformer-zh", 
+            model=os.path.join(models_dir, 'paraformer-zh'), 
             model_revision="v2.0.4",
-            vad_model=r"D:\Backend_Algorithm_travel_assistance\downloaded_models\fsmn-vad", 
+            vad_model=os.path.join(models_dir, 'fsmn-vad'), 
             vad_model_revision="v2.0.4",
-            punc_model=r"D:\Backend_Algorithm_travel_assistance\downloaded_models\ct-punc", 
+            punc_model=os.path.join(models_dir, 'ct-punc'), 
             punc_model_revision="v2.0.4"
         )
 

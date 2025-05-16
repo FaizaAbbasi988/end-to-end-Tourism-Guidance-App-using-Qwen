@@ -41,10 +41,11 @@ async def audio_chatbot(
         content = await file.read()
         result = non_audio_chatbot(content)
         return TranscriptionResponse(
-            question = result.question,
-            answer = result.answer,
-            success = True
-        )
+                question = result.question,
+                answer = result.answer,
+                audio = result.audio,
+                success = True
+            )
     except Exception as e:
         raise HTTPException(
             status_code=500, 
