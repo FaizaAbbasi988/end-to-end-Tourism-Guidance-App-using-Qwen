@@ -64,3 +64,5 @@ insurance/
 speech/
 *.xlsx
 *.pkl
+*.mp3
+*.wav
