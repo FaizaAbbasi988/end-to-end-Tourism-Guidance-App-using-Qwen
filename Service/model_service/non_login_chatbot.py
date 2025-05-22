@@ -18,6 +18,12 @@ from Service.common.non_login_chatbot_response import NonLoginChatBotResponse
 speech_model = SpeechRecognitionModel()
 non_login_speech_answer = NonLoginSpeechAnswer()
 
+
+# non_login_model = NonLogin()
+speech_model = SpeechRecognitionModel()
+non_login_speech_answer = NonLoginSpeechAnswer()
+
+
 non_login_model = NonLogin()
 text_to_speech = TextToAudio()
 
