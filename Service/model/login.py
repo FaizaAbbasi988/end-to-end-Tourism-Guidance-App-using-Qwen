@@ -9,7 +9,7 @@ class Login():
         self.initialize()
 
     def start_model(self):
-        self.model = OllamaLLM(model="qwen2.5:3b", base_url="http://localhost:11434")
+        self.model = OllamaLLM(model="qwen2.5:32b", base_url="http://192.168.1.102:11434")
 
     def prompts(self):
         # These should be your pre-written templates

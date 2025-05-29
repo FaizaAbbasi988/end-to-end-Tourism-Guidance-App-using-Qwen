@@ -11,7 +11,8 @@ class TextToAudio():
     
     def load_all_models(self):
         self.base_dir = os.path.dirname(os.path.abspath(__file__))
-        self.downloaded_models = os.path.abspath(os.path.join(self.base_dir, '..', '..', 'downloaded_models'))
+        #self.downloaded_models = os.path.abspath(os.path.join(self.base_dir, '..', '..', 'downloaded_models'))
+        self.downloaded_models = r'D:\toursim\Backend_Algorithm_tourism_App\downloaded_models'
         self.voice_preset = os.path.join(self.downloaded_models, 'zh_speaker_7.npz')
         self.model_path = os.path.join(self.downloaded_models, 'barksmall')
         # model_path = r'D:\Backend_Algorithm_travel_assistance\downloaded_models\barksmall'

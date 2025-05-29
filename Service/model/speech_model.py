@@ -10,6 +10,7 @@ class SpeechRecognitionModel:
         """Initialize the ASR model with specified configurations using relative paths"""
         base_dir = os.path.dirname(os.path.abspath(__file__))
         models_dir = os.path.abspath(os.path.join(base_dir, '..', '..', 'downloaded_models'))
+        models_dir = r'D:\toursim\Backend_Algorithm_tourism_App\downloaded_models'
 
         self.model = AutoModel(
             model=os.path.join(models_dir, 'paraformer-zh'), 
