@@ -27,16 +27,36 @@ router = APIRouter(
 @router.post("/travel", response_model=BaseResponse)
 async def travel_endpoint(data: TravelRequest):
     try:
-        result = handle_travel(data.dict())
-        return BaseResponse(answer=result, success=True)
+        raw_result = handle_travel(data.dict())
+        
+        # Split the string on each 路线 marker
+        segments = []
+        for part in ["路线1", "路线2", "路线3"]:
+            if part in raw_result:
+                # ensure there's a delimiter before each marker
+                raw_result = raw_result.replace(part, f"@@@{part}")
+        
+        # Split and remove empty segments
+        parts = [seg.strip() for seg in raw_result.split("@@@") if seg.strip()]
+        
+        return BaseResponse(answer=parts, success=True)
     except Exception as e:
         return BaseResponse(answer=str(e), success=False)
+
 
 @router.post("/food", response_model=BaseResponse)
 async def food_endpoint(data: FoodRequest):
     try:
-        result = handle_food(data.dict())
-        return BaseResponse(answer=result, success=True)
+        raw_result = handle_food(data.dict())
+        segments = []
+        for part in ["餐厅 1", "餐厅 2", "餐厅 3"]:
+            if part in raw_result:
+                # ensure there's a delimiter before each marker
+                raw_result = raw_result.replace(part, f"@@@{part}")
+        
+        # Split and remove empty segments
+        parts = [seg.strip() for seg in raw_result.split("@@@") if seg.strip()]
+        return BaseResponse(answer=parts, success=True)
     except Exception as e:
         return BaseResponse(answer=str(e), success=False)
 

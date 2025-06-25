@@ -1,5 +1,6 @@
 from pydantic import BaseModel
+from typing import Union
 
 class BaseResponse(BaseModel):
-    answer: str
+    answer: Union[str, list[str]]
     success: bool
