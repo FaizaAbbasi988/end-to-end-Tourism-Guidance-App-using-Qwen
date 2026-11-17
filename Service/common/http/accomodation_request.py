@@ -1,5 +1,6 @@
+from typing import List
 from pydantic import BaseModel
-from typing import List, Dict, Any
+
 
 class AccommodationRequest(BaseModel):
     selected_route: str
@@ -14,4 +15,3 @@ class AccommodationRequest(BaseModel):
     children: int
     children_age: List[int]
     transportation_preference: str
-    
