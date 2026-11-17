@@ -42,26 +42,51 @@ Then manually test the login APIs and at least one audio endpoint in Postman
 using `API_TEST_EXAMPLES.md`. Speech endpoints need local installed model
 weights. **Changes have not been runtime-tested in the author's environment.**
 
-## Proposed Phase 2 — Not applied
+## Phase 2 — Small, student-friendly cleanup (local testing needed)
 
-1. **Standardized packaging and dependencies:** `setup.py` has outdated
-   version pins and does not list every library imported by runtime code.
-   Introduce `pyproject.toml` and an explicit development setup after
-   reconciling installed versions.
-2. **Clear folder responsibilities:** separate `api/`, `schemas/`,
-   `services/`, `core/`, and `utils/`. Move modules incrementally only
-   after confirming the API suite passes.
-3. **Audio-parser error handling:** `Service/app/parse_app.py` currently uses
-   `json.loads()` on model text, which may fail on invalid JSON. Add schema
-   validation while preserving the API's consumer contract.
-4. **TTS portability:** `Service/model/text_to_speech.py` includes a
-   machine-specific output directory, and speech/audio format support needs
-   explicit documentation.
-5. **Experimental code:** inspect unused notebooks and the disabled video
-   router before archiving them; don't delete without verifying that students
-   don't use them.
-6. **API consistency:** audit all endpoint responses, error handling and tests
-   before introducing a common error envelope.
+- `setup.py` now installs the `Service` namespace correctly (including
+  `config.json`) and declares the main libraries used by the project.
+  Install with `python -m pip install -e .`; no extra packaging framework
+  was introduced. Existing environments may have extra optional dependencies.
+- `README.md` now explains the purpose of the AI microservice, setup,
+  endpoint testing, and the existing folder layout.
+- `Service/app/parse_app.py` now has one small JSON parsing function.
+  Invalid model text and explicit model errors return `success: false`
+  instead of being confused with successful parsing. **This is a behavior
+  change for invalid or plain-text Qwen output.**
+- TTS no longer depends on `D:\\travel_project\\downloaded_models`:
+  it writes to `generated_audio/` in the repository by default. The
+  optional `TOURISM_AUDIO_DIR` environment variable selects a different
+  output directory. The audio-format handling has not been changed.
+- `.gitignore` excludes generated audio and Python packaging artifacts.
+- `tests/test_audio_parser.py` checks parsing, errors, and basic response
+  structures without calling the models.
+
+**What stays unchanged:** all API URLs, successful travel/food list responses,
+accommodation and summary responses, speech recognition logic, and the
+existing folder names. No experimental files were deleted.
+
+### Verify the Phase 2 changes
+
+```powershell
+git pull origin changes
+python -m unittest discover -s tests -p "test_*.py" -v
+python Service/main.py
+```
+
+Test `/audiologin/travel` with an audio recording and confirm whether Qwen
+returns a JSON object as expected. Test TTS once if your project uses the
+non-login cultural/food audio responses. Neither was executed remotely.
+
+### Possible Phase 3 (only after local tests)
+
+1. Simplify `Service/model/audio_parse.py` and `Service/model/dates.py`
+   further while retaining their public interfaces.
+2. Review other Pydantic request/response models and document errors.
+3. Move unused experiments to a clearly labeled `experiments/` folder,
+   but only after confirming they are not needed by students.
+4. Consider an `api/`, `schemas/`, `services/` reorganization only when
+   sufficient tests exist; unnecessary folder moves don't improve teaching.
 
 ## Design trade-offs
 
