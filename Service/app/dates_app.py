@@ -10,8 +10,9 @@ import logging
 logger = logging.getLogger("uvicorn")
 
 router = APIRouter(prefix="/dates", tags=["dates"])
-speech_model = SpeechRecognitionModel()
-extractor = NonLoginSpeechAnswer()
+@lru_cache(maxsize=1)
+def get_date_extractor():
+    return NonLoginSpeechAnswer()
 
 @router.post("/extract_dates", response_model=ChineseDateResponse)
 async def process_audio(file: UploadFile = File(...)):
