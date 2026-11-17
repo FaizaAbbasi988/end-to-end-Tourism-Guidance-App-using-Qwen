@@ -1,23 +1,20 @@
+"""Login audio intent extraction; shared ASR and preprocessing utilities."""
 from typing import Dict
-import re
-import os
-import io
-import re
-import numpy as np
-import soundfile as sf
-import librosa
-from funasr import AutoModel
+
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_ollama.llms import OllamaLLM
-from langchain_core.prompts import ChatPromptTemplate
-from langchain_ollama.llms import OllamaLLM
+
 from Service.config import (
-    QWEN_SPEECH_MODEL, QWEN_SPEECH_BASE_URL,
-    TRAVEL_PARSE_PROMPT, FOOD_PARSE_PROMPT, ACCOMMODATION_PARSE_PROMPT, 
-     SUMMARY_PARSE_PROMPT, SPEECH_PROMPT, 
-    MODELS_DIR, MAIN_MODEL, VAD_MODEL, 
-    PUNC_MODEL, GEN_PARAMS, QWEN_SPEECH_MODEL, QWEN_SPEECH_BASE_URL
+    QWEN_SPEECH_MODEL,
+    QWEN_SPEECH_BASE_URL,
+    TRAVEL_PARSE_PROMPT,
+    FOOD_PARSE_PROMPT,
+    ACCOMMODATION_PARSE_PROMPT,
+    SUMMARY_PARSE_PROMPT,
 )
+from Service.model.audio_utils import preprocess_audio
+from Service.model.speech_model import SpeechRecognitionModel, get_speech_recognition_model
+
 
 class LoginSpeechAnswer:
     def __init__(self):
@@ -63,30 +60,3 @@ class LoginSpeechAnswer:
                 return {"错误": "无效类别，请选择 'travel'、'food'、'accommodation' 或 'summary'。"}
         except Exception as e:
             return {"错误": f"模型调用失败: {str(e)}"}
-
-class SpeechRecognitionModel:
-    def __init__(self):
-        self.model = AutoModel(
-            model=os.path.join(MODELS_DIR, MAIN_MODEL["name"]),
-            model_revision=MAIN_MODEL["revision"],
-            vad_model=os.path.join(MODELS_DIR, VAD_MODEL["name"]),
-            vad_model_revision=VAD_MODEL["revision"],
-            punc_model=os.path.join(MODELS_DIR, PUNC_MODEL["name"]),
-            punc_model_revision=PUNC_MODEL["revision"]
-        )
-
-    def transcribe(self, audio_data):
-        res = self.model.generate(input=audio_data, cache={}, **GEN_PARAMS)
-        return res[0]["text"] if res else ""
-
-def preprocess_audio(audio_bytes):
-    buffer = io.BytesIO(audio_bytes)
-    audio, sr = sf.read(buffer)
-    if len(audio.shape) == 2:
-        audio = np.mean(audio, axis=1)
-    if sr != 16000:
-        audio = librosa.resample(audio, orig_sr=sr, target_sr=16000)
-        sr = 16000
-    out_buffer = io.BytesIO()
-    sf.write(out_buffer, audio, sr, format='WAV')
-    return out_buffer.getvalue()
