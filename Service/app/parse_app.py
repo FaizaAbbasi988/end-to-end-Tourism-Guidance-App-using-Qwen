@@ -13,8 +13,9 @@ logger = logging.getLogger("uvicorn")
 router = APIRouter(prefix="/audiologin", tags=["audiologin"])
 
 # Initialize models
-speech_model = SpeechRecognitionModel()
-extractor = LoginSpeechAnswer()
+@lru_cache(maxsize=1)
+def get_login_audio_extractor():
+    return LoginSpeechAnswer()
 
 def run_pipeline(file: UploadFile) -> str:
     """Handle audio preprocessing and transcription."""
