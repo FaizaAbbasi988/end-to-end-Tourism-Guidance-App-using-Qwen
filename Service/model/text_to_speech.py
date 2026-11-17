@@ -3,11 +3,14 @@ import pyttsx3
 import base64
 import uuid
 import os
+from pathlib import Path
 
 
 class TTS:
     def __init__(self):
-        self.audio_dir = r"D:\travel_project\downloaded_models"
+        # Set TOURISM_AUDIO_DIR to choose another output directory.
+        default_dir = Path(__file__).resolve().parents[2] / "generated_audio"
+        self.audio_dir = os.environ.get("TOURISM_AUDIO_DIR", str(default_dir))
         os.makedirs(self.audio_dir, exist_ok=True)
 
     def _run_tts(self, text, mode, file_path):
