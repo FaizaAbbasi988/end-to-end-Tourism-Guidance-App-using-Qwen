@@ -88,6 +88,41 @@ non-login cultural/food audio responses. Neither was executed remotely.
 4. Consider an `api/`, `schemas/`, `services/` reorganization only when
    sufficient tests exist; unnecessary folder moves don't improve teaching.
 
+## Phase 3 — Simpler code and existing schemas (local testing needed)
+
+- `Service/model/audio_parse.py`: replaced four repeated prompt/chain attributes
+  with a small dictionary. Each category still uses its original prompt and
+  the same Ollama model. The existing `invoke(category, data)` method and
+  error dictionary remain.
+- `Service/app/description_app.py`: removed unused imports and now creates
+  the description model on first request.
+- `Service/app/dates_app.py`: cleaned imports and logging; its URL and
+  Chinese response keys remain unchanged.
+- Removed unused `Dict` / `Any` imports from several request models.
+  **No required request fields or response types were changed.**
+- `Service/app/login_app.py`: replaced deprecated `.dict()` calls with
+  Pydantic 2's `.model_dump()`.
+- `tests/test_student_cleanup.py`: beginner-friendly regression tests for
+  existing request/response shapes, correct audio prompt selection, and model
+  error handling. These tests do not start Ollama.
+
+### Verify Phase 3
+
+```powershell
+git pull origin changes
+python -m unittest discover -s tests -p "test_*.py" -v
+python test_login_apis.py --category all
+python Service/main.py
+```
+
+After startup, check description, dates, and audio login in Postman using
+`API_TEST_EXAMPLES.md`. The new changes are committed but have not yet been
+executed in your local Windows environment.
+
+**Intentionally postponed:** moving files/folders, deleting experiments,
+rewriting all API response contracts, or adding complex abstractions. The
+student-friendly goal is easier code without changing the AI service contract.
+
 ## Design trade-offs
 
 - The shared speech model is cached once **per Python process**. If you launch
