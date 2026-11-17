@@ -26,9 +26,6 @@ def get_text_to_speech():
     return TTS()
 
 
-def splitting_text(text: str) -> list:
-    return [chunk for chunk in text.split("\n") if chunk]
-
 
 def non_login_chatbot(place: str, info: str):
     answer = get_non_login_model().invoke(place, info)
