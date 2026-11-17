@@ -1,5 +1,8 @@
 from fastapi import UploadFile, File, HTTPException, APIRouter
-from Service.model.audio_parse import SpeechRecognitionModel, LoginSpeechAnswer, preprocess_audio
+from functools import lru_cache
+from Service.model.audio_parse import LoginSpeechAnswer
+from Service.model.audio_utils import preprocess_audio
+from Service.model.speech_model import get_speech_recognition_model
 from Service.common.http.parse_response import ParseResponse
 import logging
 import json
@@ -20,7 +23,7 @@ def run_pipeline(file: UploadFile) -> str:
         logger.info(f"Received audio file: {file.filename}, size: {len(content)} bytes")
 
         processed_audio = preprocess_audio(content)
-        transcription = speech_model.transcribe(processed_audio)
+        transcription = get_speech_recognition_model().transcribe(processed_audio)
         logger.info(f"Transcription: {transcription}")
         return transcription
     except Exception as e:
@@ -52,7 +55,7 @@ def build_endpoint(route_type: str):
     async def handler(file: UploadFile = File(...)):
         try:
             transcription = run_pipeline(file)
-            response = extractor.invoke(route_type, {"question": transcription})
+            response = get_login_audio_extractor().invoke(route_type, {"question": transcription})
             parsed = safe_parse_model_response(response) if isinstance(response, dict) else json.loads(response)
             return ParseResponse(answer=parsed, success=True)
         except Exception as e:
