@@ -167,3 +167,36 @@ but the app has not been executed in your Windows environment after cleanup.
 - The HTTP API remains synchronous for compute-heavy operations inside some
   async endpoints. Concurrency/performance optimization is a later phase.
 - The travel and food response list contract is unchanged by this refactor.
+
+## Phase 5 — Structured accommodation and summary (local testing needed)
+
+- Added `AccommodationOption`, `AccommodationResult`, and `SummaryResult`
+  Pydantic schemas to `Service/model/structured_output.py`.
+- All four login categories now use the existing Ollama JSON Schema generation,
+  validation and up-to-three-attempt retry logic.
+- Accommodation returns four strings: introduction plus **three options**.
+  Each option has name, location, price, facilities, transport and reason.
+- Summary returns four strings: introduction, itinerary (all days),
+  preparation and safety. The three sections are fixed for simple integration.
+- Added `tests/test_accommodation_summary_structured.py` with mocked
+  generation tests, plus corresponding HTTP contract tests and updated live
+  smoke tests in `test_login_apis.py`.
+- Updated `API_RESPONSE_CONTRACT.md` and `API_TEST_EXAMPLES.md`.
+
+**Breaking change for backend integration:** accommodation and summary
+previously returned `answer: str`; successful responses now return
+`answer: list[str]`. Errors continue as `answer: str, success: false`.
+Endpoint paths and input parameters did not change.
+
+Run tests from the repo root, then check Accommodation and Summary in Postman:
+
+```powershell
+git pull origin changes
+python -m unittest discover -s tests -p "test_*.py" -v
+python test_login_apis.py --category all
+python Service/main.py
+```
+
+Tests and live model generation have not yet been run in the user's environment
+for these new changes. Model output structure is validated, not hotel
+availability or geographical accuracy.
