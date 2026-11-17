@@ -7,7 +7,7 @@ from .description_app import router as description_router
 # from .video_app import router as video_router
 from .dates_app import router as dates_router
 from .parse_app import router as parse_router
-from config import BASE_API_URL  # Import from config.py
+from Service.config import BASE_API_URL
 
 def create_app():
     app = FastAPI()
