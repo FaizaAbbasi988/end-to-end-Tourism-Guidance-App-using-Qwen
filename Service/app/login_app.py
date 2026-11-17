@@ -1,4 +1,4 @@
-"""Logged-in AI endpoints. Travel/food already return list[str] from the AI model."""
+"""Logged-in AI endpoints. All four APIs return structured answer lists."""
 from fastapi import APIRouter
 
 from Service.common.http.travel_request import TravelRequest
@@ -39,8 +39,8 @@ async def food_endpoint(data: FoodRequest):
 @router.post("/accommodation", response_model=BaseResponse)
 async def accommodation_endpoint(data: AccommodationRequest):
     try:
-        result = handle_accommodation(data.model_dump())
-        return BaseResponse(answer=result, success=True)
+        answer = handle_accommodation(data.model_dump())
+        return BaseResponse(answer=answer, success=True)
     except Exception as exc:
         return BaseResponse(answer=str(exc), success=False)
 
@@ -48,7 +48,7 @@ async def accommodation_endpoint(data: AccommodationRequest):
 @router.post("/summary", response_model=BaseResponse)
 async def summary_endpoint(data: SummaryRequest):
     try:
-        result = handle_summary(data.model_dump())
-        return BaseResponse(answer=result, success=True)
+        answer = handle_summary(data.model_dump())
+        return BaseResponse(answer=answer, success=True)
     except Exception as exc:
         return BaseResponse(answer=str(exc), success=False)
