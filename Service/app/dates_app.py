@@ -1,5 +1,8 @@
 from fastapi import UploadFile, File, HTTPException
-from Service.model.dates import SpeechRecognitionModel, NonLoginSpeechAnswer, preprocess_audio
+from functools import lru_cache
+from Service.model.dates import NonLoginSpeechAnswer
+from Service.model.audio_utils import preprocess_audio
+from Service.model.speech_model import get_speech_recognition_model
 from fastapi import APIRouter
 from Service.common.http.dates_response import ChineseDateResponse  # ✅ import your new response model
 import logging
@@ -17,10 +20,10 @@ async def process_audio(file: UploadFile = File(...)):
         logger.info(f"Received audio file: {file.filename} size: {len(content)} bytes")
 
         processed_audio = preprocess_audio(content)
-        transcription = speech_model.transcribe(processed_audio)
+        transcription = get_speech_recognition_model().transcribe(processed_audio)
         logger.info(f"Transcription: {transcription}")
 
-        answer = extractor.invoke(transcription)
+        answer = get_date_extractor().invoke(transcription)
         logger.info(f"Extracted times: {answer}")
 
         #  Return only the required Chinese fields
