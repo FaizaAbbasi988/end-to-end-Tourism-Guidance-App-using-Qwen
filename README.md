@@ -14,8 +14,9 @@ applications connect to this service through HTTP.
 - **Speech:** Convert uploaded audio to text and extract travel details.
 - **Images:** Generate captions and enhance uploaded photos.
 
-The travel and food APIs return `answer` as a **JSON array of strings**.
-The other endpoints keep their own response formats.
+All **four logged-in APIs** (travel, food, accommodation, summary) return
+`answer` as a **JSON array of strings** when successful. Other endpoints
+keep their own response formats.
 
 ## Getting started
 
