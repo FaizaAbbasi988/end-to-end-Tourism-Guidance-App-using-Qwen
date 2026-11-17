@@ -1,5 +1,14 @@
 # Unused Files and Folders Audit
 
+> **Cleanup status: completed on `changes`.** This document retains the
+> original audit findings for learning and traceability. Following the audit,
+> all six `Algorithm/` files were moved unchanged to `experiments/`, the
+> `LBM` Git submodule pointer was removed, and the seven unused file
+> candidates in Section 1 were deleted. The obsolete `splitting_text`
+> helper and commented video-router references were removed too. No active
+> API routes were intentionally removed. The cleanup has been checked in
+> Git, but still requires local test and startup verification.
+
 **Branch reviewed:** `changes` at commit `aaa01cfd32ffc1d91d852feda86f9517d04d1212`
 
 This audit is for the **AI microservice repository**, not the separate backend
