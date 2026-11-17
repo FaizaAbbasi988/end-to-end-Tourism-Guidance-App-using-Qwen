@@ -81,7 +81,7 @@ introduction, 3 lunch recommendations, 3 dinner recommendations. In general:
 }
 ```
 
-**Successful response:** `answer` is a text string.
+**Successful response:** `success: true`, `answer` is an array of **4 strings**: introduction + three separate accommodation options.
 
 ## 4. Login — Summary API
 
@@ -99,7 +99,7 @@ introduction, 3 lunch recommendations, 3 dinner recommendations. In general:
 }
 ```
 
-**Successful response:** `answer` is a text string.
+**Successful response:** `success: true`, `answer` is an array of **4 strings**: introduction + daily itinerary + preparation + safety.
 
 ## 5. Non-login — Chatbot API
 
@@ -232,7 +232,8 @@ they are not covered by the travel/food list-response contract.
 - For upload requests choose **Body → form-data → File**, not raw JSON.
 - Make sure Ollama and any needed speech/caption models are available.
 - Some endpoints return `success: false` within HTTP 200; check the JSON response.
-- The list-based contract applies to **login travel and food only**.
+- The list-based contract applies to **all four login APIs** (travel, food, accommodation, summary).
+- Accommodation and summary changed from strings to arrays: inform the backend engineer.
 - The experimental video route is commented out and is **not active**.
 - If unsure which inputs an endpoint requires, check FastAPI's interactive
   documentation at `http://localhost:8000/docs`.
