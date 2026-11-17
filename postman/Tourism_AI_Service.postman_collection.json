@@ -459,8 +459,8 @@
           "request": {
             "method": "POST",
             "header": [],
-            "url": "{{baseUrl}}{{apiPrefix}}/image/beautify",
-            "description": "Image enhancement; response contains base64-encoded image data. To receive binary JPEG/ZIP use return_json=false as query parameter; this handler exposes it as a query argument.\\nIn Postman Body > form-data, choose File type for the file field(s) and select a local file. Do not type a filepath into the Value field.",
+            "url": "{{baseUrl}}{{apiPrefix}}/image/beautify?return_json=true",
+            "description": "Image enhancement. The return_json argument is a query parameter, not a multipart field. Use ?return_json=false for binary JPEG/ZIP. Select local file(s) in Postman Body > form-data.",
             "body": {
               "mode": "formdata",
               "formdata": [
@@ -468,12 +468,7 @@
                   "key": "files",
                   "type": "file",
                   "src": "",
-                  "description": "Select local file in Postman"
-                },
-                {
-                  "key": "return_json",
-                  "value": "true",
-                  "type": "text"
+                  "description": "Select one or more local images (add another files row for multiple images)"
                 }
               ]
             }
