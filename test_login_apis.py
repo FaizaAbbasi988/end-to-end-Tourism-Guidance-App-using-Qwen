@@ -77,7 +77,7 @@ def main():
     failures = []
 
     for category in categories:
-        print(f"\\n{'=' * 20} {category.upper()} {'=' * 20}", flush=True)
+        print(f"\n{'=' * 20} {category.upper()} {'=' * 20}", flush=True)
         try:
             answer = model.invoke(category, EXAMPLES[category])
             if not isinstance(answer, str) or not answer.strip():
@@ -101,7 +101,7 @@ def main():
             failures.append(category)
             traceback.print_exc()
 
-    print("\\nResult:", "FAILED " + ", ".join(failures) if failures else "ALL SELECTED CATEGORIES PASSED")
+    print("\nResult:", "FAILED " + ", ".join(failures) if failures else "ALL SELECTED CATEGORIES PASSED")
     if failures:
         raise SystemExit(1)
 
