@@ -72,3 +72,8 @@ speech/
 *.pkl
 *.mp3
 *.wav
+# Files created by the locally running AI service
+generated_audio/
+*.egg-info/
+build/
+dist/
