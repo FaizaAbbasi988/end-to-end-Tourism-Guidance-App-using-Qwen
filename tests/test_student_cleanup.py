@@ -54,8 +54,10 @@ class StudentCleanupTests(unittest.TestCase):
     def test_audio_extraction_selects_matching_prompt(self):
         # Bypass __init__ to avoid an actual Ollama connection.
         extractor = object.__new__(LoginSpeechAnswer)
-        travel = Mock(return_value='{"目的地":"晋祠"}')
-        food = Mock(return_value='{"餐别":"午餐"}')
+        travel = Mock()
+        food = Mock()
+        travel.invoke.return_value = '{"目的地":"晋祠"}'
+        food.invoke.return_value = '{"餐别":"午餐"}'
         extractor.chains = {"travel": travel, "food": food}
         result = extractor.invoke("food", {"question": "我要午餐"})
         self.assertEqual(result, '{"餐别":"午餐"}')
