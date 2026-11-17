@@ -6,6 +6,7 @@ def handle_travel(data: dict) -> str:
     return login_model.invoke("travel", data)
 
 def handle_food(data: dict) -> str:
+    print("handle_food called with data:", data)  # Debug statement
     return login_model.invoke("food", data)
 
 def handle_accommodation(data: dict) -> str:
