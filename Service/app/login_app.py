@@ -39,7 +39,7 @@ async def food_endpoint(data: FoodRequest):
 @router.post("/accommodation", response_model=BaseResponse)
 async def accommodation_endpoint(data: AccommodationRequest):
     try:
-        result = handle_accommodation(data.dict())
+        result = handle_accommodation(data.model_dump())
         return BaseResponse(answer=result, success=True)
     except Exception as exc:
         return BaseResponse(answer=str(exc), success=False)
@@ -48,7 +48,7 @@ async def accommodation_endpoint(data: AccommodationRequest):
 @router.post("/summary", response_model=BaseResponse)
 async def summary_endpoint(data: SummaryRequest):
     try:
-        result = handle_summary(data.dict())
+        result = handle_summary(data.model_dump())
         return BaseResponse(answer=result, success=True)
     except Exception as exc:
         return BaseResponse(answer=str(exc), success=False)
