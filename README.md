@@ -82,6 +82,7 @@ Service/
     speech_model.py      # Shared speech recognition model
     structured_output.py # Travel/food response validation and formatting
   model_service/         # Connects endpoints to AI code
+experiments/             # Old notebooks; not part of FastAPI
 tests/                   # Unit and API contract tests
 API_TEST_EXAMPLES.md     # Manual Postman testing examples
 REFACTOR_NOTES.md        # Changes and ideas for future cleanup
@@ -99,3 +100,11 @@ restaurant names without independent verification.
 
 The `changes` branch is for incremental cleanup and testing; avoid merging
 into `main` until the team has retested its integrations.
+
+## Archived experiments and removed files
+
+Older notebooks and an unused video demonstration live in
+[experiments/](experiments/) and are not loaded by the API.
+The unused `LBM` submodule pointer and outdated, unreferenced API schema
+modules were removed on `changes`. See [UNUSED_FILES_AUDIT.md](UNUSED_FILES_AUDIT.md)
+for the reasons and a full list of changes.
