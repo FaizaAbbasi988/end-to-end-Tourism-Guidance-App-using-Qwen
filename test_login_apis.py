@@ -35,7 +35,7 @@ EXAMPLES = {
         "number_of_people": 2,
         "budget": 100,
         "distance_range": "3公里",
-        "meal_preferences": ["午餐"],
+        "meal_preferences": ["午餐", "晚餐"],
     },
     "accommodation": {
         "selected_route": "晋祠 → 平遥古城",
@@ -62,12 +62,6 @@ EXAMPLES = {
 }
 
 
-def backend_split(answer, markers):
-    for marker in markers:
-        answer = answer.replace(marker, "@@@" + marker)
-    return [p.strip() for p in answer.split("@@@") if p.strip()]
-
-
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--category", choices=[*EXAMPLES, "all"], default="all")
@@ -80,22 +74,26 @@ def main():
         print(f"\n{'=' * 20} {category.upper()} {'=' * 20}", flush=True)
         try:
             answer = model.invoke(category, EXAMPLES[category])
-            if not isinstance(answer, str) or not answer.strip():
-                raise AssertionError("Empty or non-string response")
-            print(answer, flush=True)
             if category == "travel":
-                segments = backend_split(answer, ["路线1", "路线2", "路线3"])
-                assert len(segments) == 4, f"Expected intro + 3 routes, got {len(segments)}"
-                for index, segment in enumerate(segments[1:], 1):
-                    assert segment.startswith(f"路线{index}："), segment
-                print("PASS: legacy travel splitting (intro + 3 routes)")
+                assert isinstance(answer, list), "Travel must return a list"
+                assert len(answer) == 4, f"Expected intro + 3 routes, got {len(answer)}"
+                for index in range(1, 4):
+                    assert answer[index].startswith(f"路线{index}：")
+                print("\n\n".join(answer))
+                print("PASS: 4 independent travel answer elements")
             elif category == "food":
-                segments = backend_split(answer, ["餐厅 1", "餐厅 2", "餐厅 3"])
-                assert len(segments) == 4, f"Expected intro + 3 restaurants, got {len(segments)}"
-                for index, segment in enumerate(segments[1:], 1):
-                    assert segment.startswith(f"餐厅 {index}："), segment
-                print("PASS: legacy food splitting (intro + 3 restaurants)")
+                assert isinstance(answer, list), "Food must return a list"
+                meals = EXAMPLES["food"]["meal_preferences"]
+                assert len(answer) == 1 + 3 * len(meals), "Incorrect restaurant list length"
+                for meal_index, meal in enumerate(meals):
+                    for number in range(1, 4):
+                        element = answer[1 + meal_index * 3 + number - 1]
+                        assert element.startswith(f"【{meal}】餐厅 {number}：")
+                print("\n\n".join(answer))
+                print("PASS: independent restaurant elements for every meal")
             else:
+                assert isinstance(answer, str) and answer.strip(), "Expected nonempty text"
+                print(answer)
                 print("PASS: nonempty text returned (not schema-validated)")
         except Exception:
             failures.append(category)
