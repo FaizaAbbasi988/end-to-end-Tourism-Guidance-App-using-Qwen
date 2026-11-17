@@ -123,6 +123,41 @@ executed in your local Windows environment.
 rewriting all API response contracts, or adding complex abstractions. The
 student-friendly goal is easier code without changing the AI service contract.
 
+## Phase 4 — Remove unused files and archive experiments
+
+- Moved all five `.ipynb` notebooks and the standalone video demo from
+  `Algorithm/` to `experiments/`, keeping **their original Git blob hashes**
+  unchanged. See `experiments/README.md`.
+- Deleted the unused `LBM` Git submodule pointer. Git contained no
+  `.gitmodules` configuration for it.
+- Deleted the inactive `Service/app/video_app.py` (entirely commented out).
+- Deleted unreferenced `Service/model_service/base_tts.py`,
+  `Service/common/http/beauty_request.py`,
+  `Service/common/http/beauty_response.py`,
+  `Service/common/http/transcription_request.py`,
+  `Service/common/http/dates_request.py`, and `test_results.json`.
+- Removed commented video router lines and the unused `splitting_text` helper.
+- Updated the main README and the audit report.
+
+No registered endpoint paths, active model files, Pydantic schemas used
+by active routes, or prompts were changed in Phase 4.
+
+**Important:** Removing the Git submodule pointer does not automatically
+delete a populated local `LBM/` directory on every computer. If one remains,
+check it for local changes before deleting it manually.
+
+### Verify Phase 4 locally
+
+```powershell
+git pull origin changes
+python -m unittest discover -s tests -p "test_*.py" -v
+python Service/main.py
+```
+
+Test travel/food and at least one image and audio request using
+`API_TEST_EXAMPLES.md`. Notebook moves were verified in the Git tree,
+but the app has not been executed in your Windows environment after cleanup.
+
 ## Design trade-offs
 
 - The shared speech model is cached once **per Python process**. If you launch
