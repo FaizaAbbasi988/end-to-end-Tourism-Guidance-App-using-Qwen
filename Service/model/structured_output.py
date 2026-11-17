@@ -146,3 +146,4 @@ def format_summary(raw: str) -> List[str]:
         "行前准备：\n" + _text(result.preparation, "preparation"),
         "重要事项及安全：\n" + _text(result.safety, "safety"),
     ]
+
