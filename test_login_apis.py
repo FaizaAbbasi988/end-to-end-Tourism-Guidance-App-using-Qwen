@@ -91,10 +91,18 @@ def main():
                         assert element.startswith(f"【{meal}】餐厅 {number}：")
                 print("\n\n".join(answer))
                 print("PASS: independent restaurant elements for every meal")
-            else:
-                assert isinstance(answer, str) and answer.strip(), "Expected nonempty text"
-                print(answer)
-                print("PASS: nonempty text returned (not schema-validated)")
+            elif category == "accommodation":
+                assert isinstance(answer, list) and len(answer) == 4, "Expected intro + 3 accommodations"
+                for index in range(1, 4):
+                    assert answer[index].startswith(f"住宿选项{index}：")
+                print("\n\n".join(answer))
+                print("PASS: 4 independent accommodation answer elements")
+            elif category == "summary":
+                assert isinstance(answer, list) and len(answer) == 4, "Expected intro + 3 summary sections"
+                for index, title in enumerate(("每日行程：", "行前准备：", "重要事项及安全："), 1):
+                    assert answer[index].startswith(title)
+                print("\n\n".join(answer))
+                print("PASS: 4 independent summary answer elements")
         except Exception:
             failures.append(category)
             traceback.print_exc()
