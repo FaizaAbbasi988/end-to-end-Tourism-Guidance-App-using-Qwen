@@ -105,13 +105,19 @@ PROCESSOR_PARAMS = {
     "truncation": TTS_CONFIG["generation_params"]["truncation"]
 }
 
-TASK = config["task"]
-SIZE = config["size"]
-CKPT_DIR = os.path.abspath(config["ckpt_dir"])
-PHANTOM_CKPT = os.path.abspath(config["phantom_ckpt"])
-OUTPUT_DIR = os.path.abspath(config["output_dir"])
-GENERATE_PY = os.path.abspath(config["generate_py"])
-PYTHON_EXECUTABLE = os.path.abspath(config["python_executable"])
+# TASK = config["task"]
+# SIZE = config["size"]
+# CKPT_DIR = os.path.abspath(config["ckpt_dir"])
+# PHANTOM_CKPT = os.path.abspath(config["phantom_ckpt"])
+# OUTPUT_DIR = os.path.abspath(config["output_dir"])
+# GENERATE_PY = os.path.abspath(config["generate_py"])
+# PYTHON_EXECUTABLE = os.path.abspath(config["python_executable"])
 
-# Ensure output directory exists
-os.makedirs(OUTPUT_DIR, exist_ok=True)
+
+TRAVEL_PARSE_PROMPT = config["TRAVEL_PARSE_PROMPT"]
+FOOD_PARSE_PROMPT = config["FOOD_PARSE_PROMPT"]
+ACCOMMODATION_PARSE_PROMPT = config["ACCOMMODATION_PARSE_PROMPT"]
+SUMMARY_PARSE_PROMPT = config["SUMMARY_PARSE_PROMPT"]
+
+# # Ensure output directory exists
+# os.makedirs(OUTPUT_DIR, exist_ok=True)

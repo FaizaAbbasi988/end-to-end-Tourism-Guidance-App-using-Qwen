@@ -14,9 +14,9 @@ from Service.common.non_login_audio_chatbot_response import NonLoginAudioChatbot
 from Service.common.non_login_chatbot_response import NonLoginChatBotResponse
 
 
-# non_login_model = NonLogin()
-speech_model = SpeechRecognitionModel()
-non_login_speech_answer = NonLoginSpeechAnswer()
+# # non_login_model = NonLogin()
+# speech_model = SpeechRecognitionModel()
+# non_login_speech_answer = NonLoginSpeechAnswer()
 
 
 # non_login_model = NonLogin()
@@ -24,7 +24,7 @@ speech_model = SpeechRecognitionModel()
 non_login_speech_answer = NonLoginSpeechAnswer()
 
 
-non_login_model = NonLogin()
+non_login_model = NonLogin() 
 text_to_speech = TTS()
 
 def splitting_text(text: str)-> list:

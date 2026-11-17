@@ -36,7 +36,9 @@ class Login():
         if category == "travel":
             return self.chain_travel.invoke(data)
         elif category == "food":
-            return self.chain_food.invoke(data)
+            asn = self.chain_food.invoke(data)
+            print("Food response from model:", asn)  # Debug statement
+            return asn
         elif category == "accommodation":
             return self.chain_accommodation.invoke(data)
         elif category == "summary":

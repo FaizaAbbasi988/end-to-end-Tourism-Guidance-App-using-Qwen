@@ -47,7 +47,9 @@ async def travel_endpoint(data: TravelRequest):
 @router.post("/food", response_model=BaseResponse)
 async def food_endpoint(data: FoodRequest):
     try:
+        print("Received food request with data:", data)  # Debug statement
         raw_result = handle_food(data.dict())
+        print("Raw food result from model:", raw_result)  # Debug statement
         segments = []
         for part in ["餐厅 1", "餐厅 2", "餐厅 3"]:
             if part in raw_result:
