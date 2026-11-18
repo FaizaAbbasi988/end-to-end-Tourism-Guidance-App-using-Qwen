@@ -1,23 +1,25 @@
-from fastapi import APIRouter
-from pydantic import BaseModel
-from fastapi import FastAPI, UploadFile, Form, HTTPException
+"""Generate a short description of a destination."""
+from functools import lru_cache
 
-from Service.model.description import Description
+from fastapi import APIRouter
+
 from Service.common.http.description_request import DescriptionRequest
 from Service.common.http.description_response import DescriptionResponse
+from Service.model.description import Description
 
-description_model = Description()
+router = APIRouter(prefix="/description", tags=["description"])
 
-router = APIRouter(
-    prefix="/description",
-    tags=["description"]
-)
 
-# ===== Endpoints =====
+@lru_cache(maxsize=1)
+def get_description_model():
+    """Create the Qwen client only when the description API is first used."""
+    return Description()
+
+
 @router.post("/text", response_model=DescriptionResponse)
 async def description_endpoint(data: DescriptionRequest):
     try:
-        result = description_model.invoke(data.dict())
-        return DescriptionResponse(answer=result, success=True)
-    except Exception as e:
-        return DescriptionResponse(answer=str(e), success=False)
+        answer = get_description_model().invoke(data.model_dump())
+        return DescriptionResponse(answer=answer, success=True)
+    except Exception as exc:
+        return DescriptionResponse(answer=str(exc), success=False)

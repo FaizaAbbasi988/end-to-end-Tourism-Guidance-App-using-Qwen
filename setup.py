@@ -1,26 +1,33 @@
-from setuptools import setup, find_packages
+"""Simple package setup for the Tourism AI teaching project.
+
+Install from the repository root with: python -m pip install -e .
+Start the API with: python -m Service.main
+"""
+from setuptools import find_namespace_packages, setup
+
 
 setup(
-    name="tourism_backend",
+    name="tourism-ai-service",
     version="1.0.0",
-    author="Your Name",
-    description="Backend Algorithm for Tourism App",
-    python_requires='==3.10.0',
-    packages=find_packages(where='Service'),
-    package_dir={'': 'Service'},
+    description="Educational tourism AI microservice using Qwen and FastAPI",
+    python_requires=">=3.10,<3.13",
+    packages=find_namespace_packages(include=["Service", "Service.*"]),
+    package_data={"Service": ["config.json"]},
+    include_package_data=True,
     install_requires=[
-        'langchain_core==0.3.61',
-        'langchain_ollama==0.3.3',
-        'uvicorn==0.34.2',
-        'fastapi==0.115.12',
-        'funasr==1.2.6',
-        'pyaudio==0.2.14',
-        'transformers==4.52.3',
-        'python-multipart==0.0.20'
+        "fastapi>=0.115,<1",
+        "uvicorn>=0.34,<1",
+        "pydantic>=2,<3",
+        "python-multipart>=0.0.20",
+        "langchain-core>=0.3,<1",
+        "langchain-ollama>=0.3,<1",
+        "ollama>=0.4,<1",
+        "funasr>=1.2,<2",
+        "numpy",
+        "soundfile",
+        "librosa",
+        "pyttsx3",
+        "opencv-python",
+        "requests",
     ],
-    entry_points={
-        'console_scripts': [
-            'tourism-backend=main:main',
-        ],
-    },
 )

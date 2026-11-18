@@ -4,10 +4,9 @@ from .login_app import router as login_router
 from .beautification_app import router as beautification_router 
 from .caption_app import router as caption_router
 from .description_app import router as description_router
-# from .video_app import router as video_router
 from .dates_app import router as dates_router
 from .parse_app import router as parse_router
-from config import BASE_API_URL  # Import from config.py
+from Service.config import BASE_API_URL
 
 def create_app():
     app = FastAPI()
@@ -19,6 +18,5 @@ def register_router(app: FastAPI):
     app.include_router(router=beautification_router, prefix=BASE_API_URL)
     app.include_router(router=caption_router, prefix=BASE_API_URL)
     app.include_router(router=description_router, prefix=BASE_API_URL)
-    # app.include_router(router=video_router, prefix=BASE_API_URL)
     app.include_router(router = dates_router, prefix = BASE_API_URL)
     app.include_router(router = parse_router, prefix = BASE_API_URL)

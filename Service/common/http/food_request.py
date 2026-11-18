@@ -1,5 +1,6 @@
+from typing import List
 from pydantic import BaseModel
-from typing import Dict, Any, List
+
 
 class FoodRequest(BaseModel):
     selected_route: str
