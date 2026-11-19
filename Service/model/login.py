@@ -3,6 +3,7 @@
 Qwen returns schema-constrained JSON. Pydantic validates it, then Python
 formats each result as an answer list so the backend never splits text.
 """
+import logging
 from typing import Dict
 
 from langchain_core.prompts import ChatPromptTemplate
@@ -26,6 +27,9 @@ from Service.model.structured_output import (
     format_routes,
     format_summary,
 )
+
+
+logger = logging.getLogger(__name__)
 
 
 class Login:
@@ -56,7 +60,15 @@ class Login:
                 return formatter(response.response)
             except ValueError as exc:
                 last_error = exc
-        raise ValueError("Qwen failed structured-output validation after 3 attempts") from last_error
+                # Log the actual validation issue without changing the HTTP contract.
+                # Exception chaining includes the original Pydantic field errors.
+                logger.warning(
+                    "Qwen structured-output validation failed (schema=%s, attempt=%d/3): %s",
+                    schema.__name__, attempt + 1, exc, exc_info=True,
+                )
+        raise ValueError(
+            f"Qwen failed structured-output validation after 3 attempts ({schema.__name__})"
+        ) from last_error
 
     def invoke(self, category: str, data: Dict):
         if category == "travel":
