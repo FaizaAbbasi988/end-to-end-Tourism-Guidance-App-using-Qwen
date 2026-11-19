@@ -200,3 +200,29 @@ python Service/main.py
 Tests and live model generation have not yet been run in the user's environment
 for these new changes. Model output structure is validated, not hotel
 availability or geographical accuracy.
+
+## Troubleshooting — three failed Qwen validation attempts
+
+When the Java backend logs `success: false` with
+`Qwen failed structured-output validation after 3 attempts`, the error
+originates in `Service/model/login.py`. Qwen returned model output, but the
+formatter rejected it for a schema or content constraint.
+
+The Python AI-service logs now show the category's **Pydantic schema name**,
+retry number and exception traceback, including the original Pydantic
+validation error when available. Check the terminal running
+`python Service/main.py`, not just the Java logs.
+
+Common cases:
+- `RouteResult`: Qwen did not provide exactly three nonempty routes.
+- `FoodResult`: wrong meal count/order, wrong restaurant count or blank fields.
+- `AccommodationResult`: wrong accommodation count, missing fields or blanks.
+- `SummaryResult`: missing/blank itinerary, preparation or safety.
+
+Suggested steps: retry the exact request directly in Postman; compare the
+parameters with `API_TEST_EXAMPLES.md`; read the Python warning traceback.
+Only then adjust a specific prompt or validation rule if it is too strict.
+Do not accept malformed data merely to make the request successful.
+
+The failure HTTP contract remains `answer: str, success: false` (often with
+HTTP 200), so backend code should check `success` before reading the array.
